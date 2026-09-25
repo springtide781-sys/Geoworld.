@@ -4,296 +4,513 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GeoWorld - Explore the World</title>
+<title>🌍 GeoWorld - Explore Countries</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #eef6ff;
-  color: #172033;
+body{
+  font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#061b33,#063b5c,#087f8c);
+  color:white;
+  min-height:100vh;
 }
 
-header {
-  background: linear-gradient(135deg, #0645ad, #0088cc);
-  color: white;
-  text-align: center;
-  padding: 25px 15px;
+header{
+  background:rgba(0,20,40,.85);
+  padding:22px 15px;
+  text-align:center;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
 }
 
-header h1 {
-  margin: 0;
-  font-size: 32px;
+.logo{
+  font-size:32px;
+  font-weight:bold;
 }
 
-header p {
-  margin: 8px 0 0;
-  font-size: 16px;
+.subtitle{
+  margin-top:8px;
+  color:#bdefff;
 }
 
-.search-box {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 0 15px;
+.search-box{
+  max-width:650px;
+  margin:25px auto;
+  padding:0 15px;
 }
 
-.search-box input {
-  width: 100%;
-  padding: 15px 20px;
-  border-radius: 30px;
-  border: 2px solid #168de2;
-  font-size: 16px;
-  outline: none;
+.search-box input{
+  width:100%;
+  padding:16px 20px;
+  border-radius:30px;
+  border:2px solid #50d9ff;
+  outline:none;
+  font-size:16px;
+  background:white;
+  color:#111;
 }
 
-.globe-container {
-  width: 100%;
-  max-width: 850px;
-  height: 550px;
-  margin: auto;
-  position: relative;
-  overflow: hidden;
-  background: #06152e;
-  border-radius: 20px;
-  box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+.globe-section{
+  text-align:center;
+  padding:25px 15px;
 }
 
-#globe {
-  width: 100%;
-  height: 100%;
+.globe{
+  width:300px;
+  height:300px;
+  margin:20px auto;
+  border-radius:50%;
+  position:relative;
+  overflow:hidden;
+
+  background:
+    radial-gradient(circle at 35% 30%,
+    #65eaff 0%,
+    #159bd3 35%,
+    #07518d 70%,
+    #022b50 100%);
+
+  box-shadow:
+    inset -35px -20px 50px rgba(0,0,0,.6),
+    inset 20px 15px 30px rgba(255,255,255,.25),
+    0 0 45px rgba(80,220,255,.6);
+
+  animation:spin 18s linear infinite;
 }
 
-.instructions {
-  text-align: center;
-  color: white;
-  position: absolute;
-  bottom: 12px;
-  left: 0;
-  right: 0;
-  pointer-events: none;
-  font-size: 14px;
-  opacity: 0.8;
+.globe::before{
+  content:"";
+  position:absolute;
+  width:130%;
+  height:130%;
+  left:-15%;
+  top:-15%;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 35px,
+      rgba(255,255,255,.13) 36px,
+      transparent 37px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 35px,
+      rgba(255,255,255,.13) 36px,
+      transparent 37px
+    );
+
+  border-radius:50%;
 }
 
-.section-title {
-  text-align: center;
-  margin: 35px 10px 20px;
+.globe::after{
+  content:"🌎";
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:135px;
+  filter:drop-shadow(10px 12px 8px rgba(0,0,0,.35));
+  opacity:.92;
 }
 
-.country-grid {
-  max-width: 1000px;
-  margin: auto;
-  padding: 0 15px 40px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 18px;
+@keyframes spin{
+  from{transform:rotateY(0deg);}
+  to{transform:rotateY(360deg);}
 }
 
-.country-card {
-  background: white;
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.10);
-  transition: 0.25s;
+.globe-title{
+  font-size:27px;
+  margin-top:15px;
 }
 
-.country-card:hover {
-  transform: translateY(-5px);
+.globe-text{
+  color:#c8f6ff;
+  margin-top:8px;
 }
 
-.country-card h2 {
-  margin-top: 0;
-  color: #0757b8;
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
 }
 
-.country-card p {
-  margin: 8px 0;
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin:20px 0;
 }
 
-footer {
-  background: #063b91;
-  color: white;
-  text-align: center;
-  padding: 18px;
+.stat{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+  backdrop-filter:blur(8px);
+}
+
+.stat-number{
+  font-size:28px;
+  font-weight:bold;
+}
+
+.stat-label{
+  margin-top:5px;
+  color:#bdefff;
+}
+
+.countries{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:18px;
+}
+
+.card{
+  background:white;
+  color:#123;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 8px 25px rgba(0,0,0,.25);
+  transition:.25s;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+}
+
+.flag{
+  font-size:48px;
+  margin-bottom:10px;
+}
+
+.card h2{
+  margin-bottom:12px;
+  color:#063b5c;
+}
+
+.card p{
+  margin:7px 0;
+  font-size:14px;
+}
+
+.card strong{
+  color:#07518d;
+}
+
+button{
+  margin-top:12px;
+  padding:10px 16px;
+  border:0;
+  border-radius:20px;
+  background:#087f8c;
+  color:white;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#055765;
+}
+
+.loading{
+  text-align:center;
+  padding:40px;
+  font-size:20px;
+}
+
+footer{
+  margin-top:40px;
+  padding:25px;
+  text-align:center;
+  background:rgba(0,20,40,.8);
+  color:#bdefff;
+}
+
+@media(max-width:600px){
+  .logo{
+    font-size:26px;
+  }
+
+  .globe{
+    width:240px;
+    height:240px;
+  }
+
+  .globe::after{
+    font-size:105px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
 }
 </style>
-
-<!-- Globe library -->
-<script src="https://unpkg.com/globe.gl"></script>
-
 </head>
 
 <body>
 
 <header>
-  <h1>🌍 GeoWorld</h1>
-  <p>Explore Countries of the World</p>
+  <div class="logo">🌍 GeoWorld</div>
+  <div class="subtitle">
+    Explore Countries of the World
+  </div>
 </header>
 
 <div class="search-box">
   <input
     type="text"
     id="search"
-    placeholder="🔍 Search a country..."
-    onkeyup="searchCountry()"
+    placeholder="🔎 Search a country..."
   >
 </div>
 
-<div class="globe-container">
-  <div id="globe"></div>
-  <div class="instructions">
-    👆 Drag to rotate • 🔎 Scroll/Pinch to zoom
-  </div>
-</div>
+<section class="globe-section">
 
-<h2 class="section-title">🌎 World Explorer</h2>
+  <div class="globe"></div>
 
-<div class="country-grid" id="countries">
-
-  <div class="country-card" data-country="India">
-    <h2>🇮🇳 India</h2>
-    <p><b>Capital:</b> New Delhi</p>
-    <p><b>Continent:</b> Asia</p>
-    <p><b>Currency:</b> Indian Rupee</p>
+  <div class="globe-title">
+    World Explorer
   </div>
 
-  <div class="country-card" data-country="Japan">
-    <h2>🇯🇵 Japan</h2>
-    <p><b>Capital:</b> Tokyo</p>
-    <p><b>Continent:</b> Asia</p>
-    <p><b>Currency:</b> Yen</p>
+  <div class="globe-text">
+    Explore countries and their basic geographical information.
   </div>
 
-  <div class="country-card" data-country="France">
-    <h2>🇫🇷 France</h2>
-    <p><b>Capital:</b> Paris</p>
-    <p><b>Continent:</b> Europe</p>
-    <p><b>Currency:</b> Euro</p>
+</section>
+
+<div class="container">
+
+  <div class="stats">
+
+    <div class="stat">
+      <div class="stat-number" id="countryCount">0</div>
+      <div class="stat-label">Countries Loaded</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-number">7</div>
+      <div class="stat-label">Continents</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-number">🌎</div>
+      <div class="stat-label">One World</div>
+    </div>
+
   </div>
 
-  <div class="country-card" data-country="Brazil">
-    <h2>🇧🇷 Brazil</h2>
-    <p><b>Capital:</b> Brasília</p>
-    <p><b>Continent:</b> South America</p>
-    <p><b>Currency:</b> Brazilian Real</p>
-  </div>
-
-  <div class="country-card" data-country="United States">
-    <h2>🇺🇸 United States</h2>
-    <p><b>Capital:</b> Washington, D.C.</p>
-    <p><b>Continent:</b> North America</p>
-    <p><b>Currency:</b> US Dollar</p>
-  </div>
-
-  <div class="country-card" data-country="Australia">
-    <h2>🇦🇺 Australia</h2>
-    <p><b>Capital:</b> Canberra</p>
-    <p><b>Continent:</b> Oceania</p>
-    <p><b>Currency:</b> Australian Dollar</p>
-  </div>
-
-  <div class="country-card" data-country="China">
-    <h2>🇨🇳 China</h2>
-    <p><b>Capital:</b> Beijing</p>
-    <p><b>Continent:</b> Asia</p>
-    <p><b>Currency:</b> Yuan</p>
-  </div>
-
-  <div class="country-card" data-country="Canada">
-    <h2>🇨🇦 Canada</h2>
-    <p><b>Capital:</b> Ottawa</p>
-    <p><b>Continent:</b> North America</p>
-    <p><b>Currency:</b> Canadian Dollar</p>
-  </div>
-
-  <div class="country-card" data-country="Germany">
-    <h2>🇩🇪 Germany</h2>
-    <p><b>Capital:</b> Berlin</p>
-    <p><b>Continent:</b> Europe</p>
-    <p><b>Currency:</b> Euro</p>
-  </div>
-
-  <div class="country-card" data-country="United Kingdom">
-    <h2>🇬🇧 United Kingdom</h2>
-    <p><b>Capital:</b> London</p>
-    <p><b>Continent:</b> Europe</p>
-    <p><b>Currency:</b> Pound Sterling</p>
-  </div>
-
-  <div class="country-card" data-country="Russia">
-    <h2>🇷🇺 Russia</h2>
-    <p><b>Capital:</b> Moscow</p>
-    <p><b>Continent:</b> Europe & Asia</p>
-    <p><b>Currency:</b> Russian Ruble</p>
-  </div>
-
-  <div class="country-card" data-country="South Africa">
-    <h2>🇿🇦 South Africa</h2>
-    <p><b>Capital:</b> Pretoria</p>
-    <p><b>Continent:</b> Africa</p>
-    <p><b>Currency:</b> Rand</p>
+  <div id="countries" class="countries">
+    <div class="loading">
+      🌍 Loading countries...
+    </div>
   </div>
 
 </div>
 
 <footer>
-  🌍 GeoWorld | Learn Geography Around the World
+  🌍 GeoWorld © 2026  
+  <br>
+  Explore • Learn • Discover
 </footer>
 
 <script>
 
-const globeElement = document.getElementById("globe");
+let allCountries = [];
 
-const world = Globe()
-  (globeElement)
-  .globeImageUrl(
-    "https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-  )
-  .backgroundImageUrl(
-    "https://unpkg.com/three-globe/example/img/night-sky.png"
-  )
-  .bumpImageUrl(
-    "https://unpkg.com/three-globe/example/img/earth-topology.png"
-  )
-  .showAtmosphere(true)
-  .atmosphereColor("#4fc3ff")
-  .atmosphereAltitude(0.18);
+/* Load countries */
 
-world.controls().autoRotate = true;
-world.controls().autoRotateSpeed = 0.35;
+async function loadCountries(){
 
-function searchCountry() {
+  const container = document.getElementById("countries");
 
-  const input =
-    document.getElementById("search")
-      .value
-      .toLowerCase()
-      .trim();
+  try{
 
-  const cards =
-    document.querySelectorAll(".country-card");
+    const response = await fetch(
+      "https://restcountries.com/v3.1/all?fields=name,flags,capital,region,subregion,population,currencies,languages"
+    );
 
-  cards.forEach(card => {
-
-    const country =
-      card.dataset.country.toLowerCase();
-
-    if (country.includes(input)) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
+    if(!response.ok){
+      throw new Error("Unable to load countries");
     }
 
-  });
+    allCountries = await response.json();
+
+    allCountries.sort((a,b)=>
+      a.name.common.localeCompare(b.name.common)
+    );
+
+    document.getElementById("countryCount").textContent =
+      allCountries.length;
+
+    displayCountries(allCountries);
+
+  }catch(error){
+
+    container.innerHTML = `
+      <div class="loading">
+        ❌ Countries could not be loaded.
+        <br><br>
+        Please check your internet connection.
+      </div>
+    `;
+
+  }
+
 }
 
-window.addEventListener("resize", () => {
-  world.width(window.innerWidth);
-});
+
+/* Display countries */
+
+function displayCountries(countries){
+
+  const container = document.getElementById("countries");
+
+  if(countries.length === 0){
+
+    container.innerHTML = `
+      <div class="loading">
+        🔎 No country found.
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML = countries
+    .map(country => createCard(country))
+    .join("");
+
+}
+
+
+/* Create country card */
+
+function createCard(country){
+
+  const name = country.name?.common || "Unknown";
+
+  const flag = country.flags?.emoji || "🌍";
+
+  const capital =
+    country.capital?.[0] || "N/A";
+
+  const region =
+    country.region || "N/A";
+
+  const subregion =
+    country.subregion || "N/A";
+
+  const population =
+    country.population
+      ? country.population.toLocaleString()
+      : "N/A";
+
+  let currency = "N/A";
+
+  if(country.currencies){
+
+    currency =
+      Object.entries(country.currencies)
+      .map(([code,data]) =>
+        `${data.name} (${code})`
+      )
+      .join(", ");
+
+  }
+
+  let languages = "N/A";
+
+  if(country.languages){
+
+    languages =
+      Object.values(country.languages)
+      .join(", ");
+
+  }
+
+  return `
+
+    <div class="card">
+
+      <div class="flag">
+        ${flag}
+      </div>
+
+      <h2>${name}</h2>
+
+      <p>
+        <strong>🏛️ Capital:</strong>
+        ${capital}
+      </p>
+
+      <p>
+        <strong>🌎 Region:</strong>
+        ${region}
+      </p>
+
+      <p>
+        <strong>📍 Subregion:</strong>
+        ${subregion}
+      </p>
+
+      <p>
+        <strong>👥 Population:</strong>
+        ${population}
+      </p>
+
+      <p>
+        <strong>💰 Currency:</strong>
+        ${currency}
+      </p>
+
+      <p>
+        <strong>🗣️ Languages:</strong>
+        ${languages}
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+
+/* Search */
+
+document
+  .getElementById("search")
+  .addEventListener("input", function(){
+
+    const searchText =
+      this.value.toLowerCase().trim();
+
+    const filtered =
+      allCountries.filter(country => {
+
+        const name =
+          country.name?.common
+          ?.toLowerCase() || "";
+
+        return name.includes(searchText);
+
+      });
+
+    displayCountries(filtered);
+
+  });
+
+
+/* Start */
+
+loadCountries();
 
 </script>
 
