@@ -1,377 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>GeoWorld 🌍 - 3D Earth</title>
+<title>GeoWorld - Explore the World</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      background: #020617;
-      color: white;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef6ff;
+  color: #172033;
+}
 
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 10;
-      text-align: center;
-      padding: 18px 10px;
-      background: rgba(2, 6, 23, 0.75);
-      backdrop-filter: blur(8px);
-    }
+header {
+  background: linear-gradient(135deg, #0645ad, #0088cc);
+  color: white;
+  text-align: center;
+  padding: 25px 15px;
+}
 
-    h1 {
-      margin: 0;
-      font-size: 28px;
-    }
+header h1 {
+  margin: 0;
+  font-size: 32px;
+}
 
-    p {
-      margin: 6px 0 0;
-      color: #b8c7e0;
-      font-size: 14px;
-    }
+header p {
+  margin: 8px 0 0;
+  font-size: 16px;
+}
 
-    #globe {
-      width: 100vw;
-      height: 100vh;
-    }
+.search-box {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
 
-    .info {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      background: rgba(15, 23, 42, 0.85);
-      padding: 12px 20px;
-      border-radius: 20px;
-      font-size: 13px;
-      color: #dbeafe;
-      text-align: center;
-      backdrop-filter: blur(8px);
-    }
+.search-box input {
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 30px;
+  border: 2px solid #168de2;
+  font-size: 16px;
+  outline: none;
+}
 
-    .search {
-      position: fixed;
-      top: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      width: min(90%, 400px);
-    }
+.globe-container {
+  width: 100%;
+  max-width: 850px;
+  height: 550px;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  background: #06152e;
+  border-radius: 20px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+}
 
-    input {
-      width: 100%;
-      padding: 13px 18px;
-      border: 1px solid #38bdf8;
-      border-radius: 25px;
-      outline: none;
-      background: rgba(15, 23, 42, 0.9);
-      color: white;
-      font-size: 15px;
-    }
+#globe {
+  width: 100%;
+  height: 100%;
+}
 
-    input::placeholder {
-      color: #94a3b8;
-    }
-  </style>
+.instructions {
+  text-align: center;
+  color: white;
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.section-title {
+  text-align: center;
+  margin: 35px 10px 20px;
+}
+
+.country-grid {
+  max-width: 1000px;
+  margin: auto;
+  padding: 0 15px 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+}
+
+.country-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+  transition: 0.25s;
+}
+
+.country-card:hover {
+  transform: translateY(-5px);
+}
+
+.country-card h2 {
+  margin-top: 0;
+  color: #0757b8;
+}
+
+.country-card p {
+  margin: 8px 0;
+}
+
+footer {
+  background: #063b91;
+  color: white;
+  text-align: center;
+  padding: 18px;
+}
+</style>
+
+<!-- Globe library -->
+<script src="https://unpkg.com/globe.gl"></script>
+
 </head>
 
 <body>
 
-  <header>
-    <h1>🌍 GeoWorld</h1>
-    <p>Explore the Earth in 3D</p>
-  </header>
+<header>
+  <h1>🌍 GeoWorld</h1>
+  <p>Explore Countries of the World</p>
+</header>
 
-  <div class="search">
-    <input
-      type="text"
-      placeholder="🔎 Search a country..."
-      oninput="searchCountry(this.value)"
-    >
-  </div>
+<div class="search-box">
+  <input
+    type="text"
+    id="search"
+    placeholder="🔍 Search a country..."
+    onkeyup="searchCountry()"
+  >
+</div>
 
+<div class="globe-container">
   <div id="globe"></div>
+  <div class="instructions">
+    👆 Drag to rotate • 🔎 Scroll/Pinch to zoom
+  </div>
+</div>
 
-  <div class="info">
-    👆 Drag to rotate &nbsp; • &nbsp;
-    🤏 Pinch to zoom &nbsp; • &nbsp;
-    🌍 Explore the world
+<h2 class="section-title">🌎 World Explorer</h2>
+
+<div class="country-grid" id="countries">
+
+  <div class="country-card" data-country="India">
+    <h2>🇮🇳 India</h2>
+    <p><b>Capital:</b> New Delhi</p>
+    <p><b>Continent:</b> Asia</p>
+    <p><b>Currency:</b> Indian Rupee</p>
   </div>
 
-  <script type="module">
+  <div class="country-card" data-country="Japan">
+    <h2>🇯🇵 Japan</h2>
+    <p><b>Capital:</b> Tokyo</p>
+    <p><b>Continent:</b> Asia</p>
+    <p><b>Currency:</b> Yen</p>
+  </div>
 
-    import * as THREE from
-      "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+  <div class="country-card" data-country="France">
+    <h2>🇫🇷 France</h2>
+    <p><b>Capital:</b> Paris</p>
+    <p><b>Continent:</b> Europe</p>
+    <p><b>Currency:</b> Euro</p>
+  </div>
 
-    import { OrbitControls } from
-      "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+  <div class="country-card" data-country="Brazil">
+    <h2>🇧🇷 Brazil</h2>
+    <p><b>Capital:</b> Brasília</p>
+    <p><b>Continent:</b> South America</p>
+    <p><b>Currency:</b> Brazilian Real</p>
+  </div>
 
+  <div class="country-card" data-country="United States">
+    <h2>🇺🇸 United States</h2>
+    <p><b>Capital:</b> Washington, D.C.</p>
+    <p><b>Continent:</b> North America</p>
+    <p><b>Currency:</b> US Dollar</p>
+  </div>
 
-    /* ---------------- SCENE ---------------- */
+  <div class="country-card" data-country="Australia">
+    <h2>🇦🇺 Australia</h2>
+    <p><b>Capital:</b> Canberra</p>
+    <p><b>Continent:</b> Oceania</p>
+    <p><b>Currency:</b> Australian Dollar</p>
+  </div>
 
-    const scene = new THREE.Scene();
+  <div class="country-card" data-country="China">
+    <h2>🇨🇳 China</h2>
+    <p><b>Capital:</b> Beijing</p>
+    <p><b>Continent:</b> Asia</p>
+    <p><b>Currency:</b> Yuan</p>
+  </div>
 
-    scene.background = new THREE.Color(0x020617);
+  <div class="country-card" data-country="Canada">
+    <h2>🇨🇦 Canada</h2>
+    <p><b>Capital:</b> Ottawa</p>
+    <p><b>Continent:</b> North America</p>
+    <p><b>Currency:</b> Canadian Dollar</p>
+  </div>
 
+  <div class="country-card" data-country="Germany">
+    <h2>🇩🇪 Germany</h2>
+    <p><b>Capital:</b> Berlin</p>
+    <p><b>Continent:</b> Europe</p>
+    <p><b>Currency:</b> Euro</p>
+  </div>
 
-    /* ---------------- CAMERA ---------------- */
+  <div class="country-card" data-country="United Kingdom">
+    <h2>🇬🇧 United Kingdom</h2>
+    <p><b>Capital:</b> London</p>
+    <p><b>Continent:</b> Europe</p>
+    <p><b>Currency:</b> Pound Sterling</p>
+  </div>
 
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+  <div class="country-card" data-country="Russia">
+    <h2>🇷🇺 Russia</h2>
+    <p><b>Capital:</b> Moscow</p>
+    <p><b>Continent:</b> Europe & Asia</p>
+    <p><b>Currency:</b> Russian Ruble</p>
+  </div>
 
-    camera.position.set(0, 0, 3);
+  <div class="country-card" data-country="South Africa">
+    <h2>🇿🇦 South Africa</h2>
+    <p><b>Capital:</b> Pretoria</p>
+    <p><b>Continent:</b> Africa</p>
+    <p><b>Currency:</b> Rand</p>
+  </div>
 
+</div>
 
-    /* ---------------- RENDERER ---------------- */
+<footer>
+  🌍 GeoWorld | Learn Geography Around the World
+</footer>
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true
-    });
+<script>
 
-    renderer.setPixelRatio(
-      Math.min(window.devicePixelRatio, 2)
-    );
+const globeElement = document.getElementById("globe");
 
-    renderer.setSize(
-      window.innerWidth,
-      window.innerHeight
-    );
+const world = Globe()
+  (globeElement)
+  .globeImageUrl(
+    "https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+  )
+  .backgroundImageUrl(
+    "https://unpkg.com/three-globe/example/img/night-sky.png"
+  )
+  .bumpImageUrl(
+    "https://unpkg.com/three-globe/example/img/earth-topology.png"
+  )
+  .showAtmosphere(true)
+  .atmosphereColor("#4fc3ff")
+  .atmosphereAltitude(0.18);
 
-    document
-      .getElementById("globe")
-      .appendChild(renderer.domElement);
+world.controls().autoRotate = true;
+world.controls().autoRotateSpeed = 0.35;
 
+function searchCountry() {
 
-    /* ---------------- EARTH ---------------- */
+  const input =
+    document.getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
 
-    const geometry = new THREE.SphereGeometry(
-      1,
-      64,
-      64
-    );
+  const cards =
+    document.querySelectorAll(".country-card");
 
-    const textureLoader = new THREE.TextureLoader();
+  cards.forEach(card => {
 
-    const earthTexture = textureLoader.load(
-      "https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg"
-    );
+    const country =
+      card.dataset.country.toLowerCase();
 
-    const earth = new THREE.Mesh(
-      geometry,
-      new THREE.MeshPhongMaterial({
-        map: earthTexture,
-        shininess: 15
-      })
-    );
-
-    scene.add(earth);
-
-
-    /* ---------------- ATMOSPHERE ---------------- */
-
-    const atmosphereGeometry =
-      new THREE.SphereGeometry(1.04, 64, 64);
-
-    const atmosphereMaterial =
-      new THREE.MeshBasicMaterial({
-        color: 0x38bdf8,
-        transparent: true,
-        opacity: 0.12,
-        side: THREE.BackSide
-      });
-
-    const atmosphere =
-      new THREE.Mesh(
-        atmosphereGeometry,
-        atmosphereMaterial
-      );
-
-    scene.add(atmosphere);
-
-
-    /* ---------------- LIGHTS ---------------- */
-
-    const ambientLight =
-      new THREE.AmbientLight(
-        0xffffff,
-        1.5
-      );
-
-    scene.add(ambientLight);
-
-
-    const sunLight =
-      new THREE.DirectionalLight(
-        0xffffff,
-        2
-      );
-
-    sunLight.position.set(5, 3, 5);
-
-    scene.add(sunLight);
-
-
-    /* ---------------- STARS ---------------- */
-
-    const starGeometry =
-      new THREE.BufferGeometry();
-
-    const starCount = 1500;
-
-    const starPositions = [];
-
-    for (let i = 0; i < starCount; i++) {
-
-      const x =
-        (Math.random() - 0.5) * 200;
-
-      const y =
-        (Math.random() - 0.5) * 200;
-
-      const z =
-        (Math.random() - 0.5) * 200;
-
-      starPositions.push(x, y, z);
+    if (country.includes(input)) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
     }
 
-    starGeometry.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(
-        starPositions,
-        3
-      )
-    );
+  });
+}
 
-    const starMaterial =
-      new THREE.PointsMaterial({
-        color: 0xffffff,
-        size: 0.5
-      });
+window.addEventListener("resize", () => {
+  world.width(window.innerWidth);
+});
 
-    const stars =
-      new THREE.Points(
-        starGeometry,
-        starMaterial
-      );
-
-    scene.add(stars);
-
-
-    /* ---------------- CONTROLS ---------------- */
-
-    const controls =
-      new OrbitControls(
-        camera,
-        renderer.domElement
-      );
-
-    controls.enableDamping = true;
-
-    controls.enableZoom = true;
-
-    controls.minDistance = 1.5;
-
-    controls.maxDistance = 6;
-
-    controls.autoRotate = true;
-
-    controls.autoRotateSpeed = 0.5;
-
-
-    /* ---------------- SEARCH ---------------- */
-
-    const countries = [
-      "India",
-      "Japan",
-      "France",
-      "Brazil",
-      "United States",
-      "Canada",
-      "Australia",
-      "China",
-      "Russia",
-      "Germany",
-      "United Kingdom",
-      "Italy",
-      "Spain",
-      "Egypt",
-      "South Africa"
-    ];
-
-    function searchCountry(value) {
-
-      if (!value) return;
-
-      const found =
-        countries.find(country =>
-          country
-            .toLowerCase()
-            .includes(value.toLowerCase())
-        );
-
-      if (found) {
-        document.title =
-          found + " - GeoWorld 🌍";
-      }
-
-    }
-
-
-    /* ---------------- ANIMATION ---------------- */
-
-    function animate() {
-
-      requestAnimationFrame(animate);
-
-      controls.update();
-
-      renderer.render(
-        scene,
-        camera
-      );
-    }
-
-    animate();
-
-
-    /* ---------------- RESIZE ---------------- */
-
-    window.addEventListener(
-      "resize",
-      () => {
-
-        camera.aspect =
-          window.innerWidth /
-          window.innerHeight;
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(
-          window.innerWidth,
-          window.innerHeight
-        );
-
-      }
-    );
-
-  </script>
+</script>
 
 </body>
 </html>
